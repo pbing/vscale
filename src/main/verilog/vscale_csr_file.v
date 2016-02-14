@@ -112,6 +112,8 @@ module vscale_csr_file(
            `CSR_CLEAR : wdata_internal = rdata & ~wdata;
            default : wdata_internal = wdata;
          endcase // case (cmd)
+      end else begin
+	 wdata_internal = wdata;
       end
    end // always @ begin
 
