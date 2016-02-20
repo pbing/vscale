@@ -49,7 +49,6 @@ module vscale_modelsim_top();
    initial begin
       rc = $value$plusargs("max-cycles=%d", max_cycles);
       rc = $value$plusargs("loadmem=%s", loadmem);
-//      $value$plusargs("vpdfile=%s", vpdfile);
       if (loadmem) begin
          $readmemh(loadmem, hexfile);
          for (i = 0; i < hexfile_words; i = i + 1) begin
@@ -58,9 +57,6 @@ module vscale_modelsim_top();
             end
          end
       end
-//      $vcdplusfile(vpdfile);
-//      $vcdpluson();
-      // $vcdplusmemon();
       #100 reset = 0;
    end // initial begin
 
@@ -73,10 +69,8 @@ module vscale_modelsim_top();
       if (!reset) begin
          if (htif_pcr_resp_valid && htif_pcr_resp_data != 0) begin
             if (htif_pcr_resp_data == 1) begin
-//               $vcdplusclose;
                $stop;
             end else begin
-//               $vcdplusclose;
                $sformat(reason, "tohost = %d", htif_pcr_resp_data >> 1);
             end
          end
@@ -85,10 +79,8 @@ module vscale_modelsim_top();
 
       if (reason) begin
          $fdisplay(stderr, "*** FAILED *** (%s) after %d simulation cycles", reason, trace_count);
-         //$vcdplusclose;
          $stop;
       end
    end
 
 endmodule // vscale_hex_tb
-
