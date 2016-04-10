@@ -104,6 +104,7 @@ module vscale_csr_file(
    assign illegal_access = illegal_region || (system_en && !defined);
 
    always @(*) begin
+      wdata_internal = wdata;
       if (host_wen) begin
          wdata_internal = htif_pcr_req_data;
       end else if (system_wen) begin

@@ -147,8 +147,8 @@ module vscale_ctrl(
    end
 
    assign kill_DX = stall_DX || ex_DX || ex_WB;
-   assign stall_DX = stall_WB || load_use || raw_on_busy_md
-                     || (fence_i && store_in_WB) || (uses_md && !md_req_ready);
+   assign stall_DX = (stall_WB || load_use || raw_on_busy_md
+                     || (fence_i && store_in_WB) || (uses_md_unkilled && !md_req_ready)) && !exception;
    assign new_ex_DX = ebreak || ecall || illegal_instruction || illegal_csr_access;
    assign ex_DX = had_ex_DX || ((new_ex_DX) && !stall_DX); // TODO: add causes
    assign killed_DX = prev_killed_DX || kill_DX;
@@ -435,7 +435,7 @@ module vscale_ctrl(
    end
 
    assign kill_WB = stall_WB || ex_WB;
-   assign stall_WB = (dmem_wait && dmem_en_WB) || (uses_md_WB && !md_resp_valid);
+   assign stall_WB = ((dmem_wait && dmem_en_WB) || (uses_md_WB && !md_resp_valid)) && !exception;
    assign dmem_access_exception = dmem_badmem_e && !stall_WB;
    assign ex_WB = had_ex_WB || dmem_access_exception;
    assign killed_WB = prev_killed_WB || kill_WB;
